@@ -4,13 +4,18 @@ void ArbitrageDetector::setCurrencyData(std::unordered_map<std::string, double> 
     exchangeRates_ = exchangeRates;
 }
 
+double getExchangeRate(const std::string& baseCurrency, const std::string& targetCurrency) {
+
+    // TODO
+}
+
 std::vector<std::string> ArbitrageDetector::findArbitrageOpps() {
     std::vector<std::string> opportunities;
     // TODO: finish function
 
     /*
     
-    arbitrageOpportunities = []
+    opportunities = []
 
     for each currencyA in exchangeRates:
         for each currencyB in exchangeRates:
