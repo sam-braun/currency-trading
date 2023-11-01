@@ -15,7 +15,6 @@ std::vector<std::string> ArbitrageDetector::findArbitrageOpps() {
     for each currencyA in exchangeRates:
         for each currencyB in exchangeRates:
             if currencyA != currencyB:
-                // Convert from currencyA to currencyB
                 rateAB = getExchangeRate(currencyA, currencyB)
                 
                 // triangular part
@@ -33,7 +32,6 @@ std::vector<std::string> ArbitrageDetector::findArbitrageOpps() {
                             }
                             arbitrageOpportunities.append(arbitrageOpportunity)
 
-                            
     
     */
     
