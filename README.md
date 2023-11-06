@@ -16,4 +16,4 @@ This application is designed to uncover real-time arbitrage opportunities in the
 1. Clone the repository to your local machine:
    ```sh
    git clone git@github.com:sam-braun/currency-trading.git
-   cd arbitrage-detector
+   cd currency-trading
