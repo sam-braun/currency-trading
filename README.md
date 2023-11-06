@@ -1,7 +1,7 @@
 # Arbitrage Opportunity Detector
 
 ## Project Overview
-This application is designed to uncover real-time arbitrage opportunities in the foreign exchange market. It scrutinizes variances in currency exchange rates across multiple brokers, employing a mathematical model for triangular arbitrage detection. The backend is developed in C++, integrated with a REST API to acquire real-time currency data. The frontend is built using React to visually represent the arbitrage opportunities, enhancing user interaction and understanding of potential financial outcomes.
+This application is designed to identify real-time currency trading arbitrage opportunities in the foreign exchange market by employing a model for triangular arbitrage detection.
 
 ## Getting Started
 
