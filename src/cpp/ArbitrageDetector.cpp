@@ -1,4 +1,4 @@
-#include "ArbitrageDetector.h"
+#include "headers/ArbitrageDetector.h"
 
 void ArbitrageDetector::setCurrencyData(std::unordered_map<std::string, double> exchangeRates) {
     exchangeRates_ = exchangeRates;
