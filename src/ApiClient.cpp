@@ -1,5 +1,6 @@
-#include "headers/ApiClient.h"
+#include "include/ApiClient.h"
 #include <curl/curl.h>
+#include <json/json.h>
 
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
 {
@@ -22,22 +23,31 @@ std::unordered_map<std::string, double> ApiClient::fetchExchangeRates() {
 
         CURLcode res = curl_easy_perform(curl);
         if(res != CURLE_OK) {
-            // TODO: handle error!!!
-
-
-        } else {
-            size_t startPos = 0, endPos = 0;
-            while ((endPos = responseString.find('\n', startPos)) != std::string::npos) {
-                std::string line = responseString.substr(startPos, endPos - startPos);
-                size_t commaPos = line.find(',');
-                std::string currencyPair = line.substr(0, commaPos);
-                double rate = std::stod(line.substr(commaPos + 1));
-                exchangeRates[currencyPair] = rate;
-                startPos = endPos + 1;
-            }
+            curl_easy_cleanup(curl);
+            return exchangeRates;
         }
 
         curl_easy_cleanup(curl);
+
+        Json::Value jsonData;
+        Json::Reader jsonReader;
+
+        if(jsonReader.parse(responseString, jsonData)) {
+            const Json::Value& rates = jsonData["rates"];
+            for (Json::ValueIterator it = rates.begin(); it != rates.end(); ++it) {
+                // Assuming each key in the JSON "rates" object is a currency code
+                std::string currencyCode = it.key().asString();
+                double rate = (*it).asDouble();
+                exchangeRates[currencyCode] = rate;
+            }
+        } else {
+            //TODO handle error
+
+
+
+
+
+        }
     }
 
     return exchangeRates;
