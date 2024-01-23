@@ -46,5 +46,5 @@ std::unordered_map<std::string, double> ApiClient::fetchRates() {
             }
         }
     }
-
+    return rates; // Add this line to return the rates map
 }

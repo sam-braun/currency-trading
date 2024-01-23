@@ -1,4 +1,4 @@
-#include "ArbitrageDetector.h"
+#include "../include/ArbitrageDetector.h"
 #include <iostream>
 #include <algorithm>
 #include <limits>
