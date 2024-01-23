@@ -1,18 +1,23 @@
-#ifndef ARBITRAGE_DETECTOR_H
-#define ARBITRAGE_DETECTOR_H
+#ifndef ARBITRAGEDETECTOR_H
+#define ARBITRAGEDETECTOR_H
 
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 class ArbitrageDetector {
 public:
-    void setCurrencyData(std::unordered_map<std::string, double> exchangeRates);
-    double getExchangeRate(const std::string& baseCurrency, const std::string& targetCurrency);
-    std::vector<std::string> findArbitrageOpps();
-    
+    ArbitrageDetector();
+
+    // Sets the exchange rates data
+    void setCurrencyData(const std::unordered_map<std::string, double>& rates);
+
+    // Finds and prints out arbitrage opportunities for the given currencies
+    void findArbitrageOpportunities(const std::vector<std::string>& currencies);
+
 private:
-    std::unordered_map<std::string, double> exchangeRates_;
+    // Stores exchange rates as a map, where the key is a currency pair (e.g., "USD-EUR") and the value is the rate
+    std::unordered_map<std::string, double> exchangeRates;
 };
 
-#endif
+#endif // ARBITRAGEDETECTOR_H

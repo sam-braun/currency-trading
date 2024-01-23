@@ -1,54 +1,50 @@
-#include "include/ApiClient.h"
+#include "../include/ApiClient.h"
 #include <curl/curl.h>
+#include <sstream>
+#include <iostream>
 #include <json/json.h>
 
-size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
+
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *s) {
+    size_t newLength = size * nmemb;
+    try {
+        s->append((char*)contents, newLength);
+        return newLength;
+    }
+    catch(std::bad_alloc &e) {
+        // Handle memory problem
+        return 0;
+    }
 }
 
-ApiClient::ApiClient(const std::string& apiUrl) : apiUrl_(apiUrl) {}
 
-std::unordered_map<std::string, double> ApiClient::fetchExchangeRates() {
-    std::unordered_map<std::string, double> exchangeRates;
-    CURL* curl = curl_easy_init();
+ApiClient::ApiClient(const std::string& url) : m_url(url) {}
 
+std::unordered_map<std::string, double> ApiClient::fetchRates() {
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+    std::unordered_map<std::string, double> rates;
+
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
     if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, apiUrl_.c_str());
+        curl_easy_setopt(curl, CURLOPT_URL, m_url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-
-        std::string responseString;
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseString);
-
-        CURLcode res = curl_easy_perform(curl);
-        if(res != CURLE_OK) {
-            curl_easy_cleanup(curl);
-            return exchangeRates;
-        }
-
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
 
-        Json::Value jsonData;
-        Json::Reader jsonReader;
-
-        if(jsonReader.parse(responseString, jsonData)) {
-            const Json::Value& rates = jsonData["rates"];
-            for (Json::ValueIterator it = rates.begin(); it != rates.end(); ++it) {
-                // Assuming each key in the JSON "rates" object is a currency code
-                std::string currencyCode = it.key().asString();
-                double rate = (*it).asDouble();
-                exchangeRates[currencyCode] = rate;
+        if(res == CURLE_OK) {
+            Json::Value jsonData;
+            Json::Reader jsonReader;
+            if(jsonReader.parse(readBuffer, jsonData)) {
+                const Json::Value& symbols = jsonData["rates"];
+                for (Json::ValueConstIterator itr = symbols.begin(); itr != symbols.end(); itr++) {
+                    rates[itr.key().asString()] = itr->asDouble();
+                }
             }
-        } else {
-            //TODO handle error
-
-
-
-
-
         }
     }
 
-    return exchangeRates;
 }

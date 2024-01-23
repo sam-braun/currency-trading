@@ -13,7 +13,7 @@ int main() {
     ApiClient apiClient(apiUrl);
     
     // setting up arbitrage detector
-    auto exchangeRates = apiClient.fetchExchangeRates();
+    auto exchangeRates = apiClient.fetchRates();
     ArbitrageDetector arbitrageDetector;
     arbitrageDetector.setCurrencyData(exchangeRates);
 
@@ -32,29 +32,12 @@ int main() {
 
     auto arbitrageOpportunities = arbitrageDetector.findArbitrageOpps();
 
-    return 0;
-}
-    std::string currency;
-    while (std::getline(ss, currency, ',')) {
-        currencies.push_back(currency);
-    }
-
+    /*
     
-    ([&exchangeRates]() -> crow::response {
-        nlohmann::json currencyData = nlohmann::json(exchangeRates);
-        return crow::response{currencyData.dump()};
-    });
+    Write printing method here
 
-    CROW_ROUTE(app, "/arbitrage")
-    ([&exchangeRates]() -> crow::response {
-        auto arbitrageOpportunities = detectArbitrage(exchangeRates);
-        nlohmann::json response = nlohmann::json(arbitrageOpportunities);
-        return crow::response{response.dump()};
-    });
+    */
 
-    // app.port(4000).multithreaded().run();
 
     return 0;
 }
-
-

@@ -1,16 +1,16 @@
-#ifndef API_CLIENT_H
-#define API_CLIENT_H
+#ifndef APICLIENT_H
+#define APICLIENT_H
 
 #include <string>
 #include <unordered_map>
 
 class ApiClient {
 public:
-    ApiClient(const std::string& apiUrl);
-    std::unordered_map<std::string, double> fetchExchangeRates();
+    ApiClient(const std::string& url);
+    std::unordered_map<std::string, double> fetchRates();
 
 private:
-    std::string apiUrl_;
+    std::string m_url;
 };
 
-#endif
+#endif // APICLIENT_H
