@@ -20,46 +20,19 @@ int main() {
     
     // setting up arbitrage detector
     auto exchangeRates = apiClient.fetchRates();
-    ArbitrageDetector arbitrageDetector;
-    arbitrageDetector.setCurrencyData(exchangeRates);
+    ArbitrageDetector arbitrageDetector(exchangeRates);
 
-
-    // test printing exchange rates
-    std::cout << "Fetched Exchange Rates:" << std::endl;
-    for (const auto& rate : exchangeRates) {
-        std::cout << rate.first << ": " << rate.second << std::endl;
-    }
-
-    std::vector<std::string> currencyCodes;
-    for (const auto& rate : exchangeRates) {
-        currencyCodes.push_back(rate.first); // Add the currency code to the vector
-    }
-
-    std::cout << "just made currency codes";
-
-
-    // // get user-selected currencies
-    // std::cout << "Enter currencies (comma-separated, e.g., USD,EUR,JPY): ";
-    // std::string input;
-    // std::getline(std::cin, input);
-
-    // // extract currencies from input
-    // std::vector<std::string> currencies;
-    // std::istringstream ss(input);
-    // std::string currency;
-    // while (std::getline(ss, currency, ',')) {
-    //     currencies.push_back(currency);
-    // }
-
-    arbitrageDetector.findArbitrageOpportunities(currencyCodes);
-
-
-    /*
+    // get user-selected base currency
+    std::cout << "Enter base currency (e.g., USD, EUR, JPY): ";
+    std::string baseCurrencyCode;
+    std::getline(std::cin, baseCurrencyCode);
     
-    Write printing method here
+    arbitrageDetector.setBaseCurrency(baseCurrencyCode);
+    arbitrageDetector.findArbitrageOpportunities();
+    arbitrageDetector.printArbitrageOpportunities();
 
-    */
 
+    
 
     return 0;
 }

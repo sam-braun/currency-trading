@@ -1,48 +1,55 @@
 #include "../include/ArbitrageDetector.h"
 #include <iostream>
-#include <algorithm>
-#include <limits>
+#include <string>
+#include <vector>
+#include <unordered_map>
 
-ArbitrageDetector::ArbitrageDetector() {}
+class ArbitrageDetector {
+public:
+    ArbitrageDetector(const std::unordered_map<std::string, double>& rates);
+    void setBaseCurrency(const std::string& baseCurrencyCode);
+    void findArbitrageOpportunities();
+    void printArbitrageOpportunities() const;
 
-void ArbitrageDetector::setCurrencyData(const std::unordered_map<std::string, double>& rates) {
-    this->exchangeRates = rates;
+private:
+    std::unordered_map<std::string, double> exchangeRates;
+    std::tuple<std::string, double> baseCurrency;
+    std::vector<std::tuple<std::string, std::string, double>> arbitrageOpportunities;
+};
+
+ArbitrageDetector::ArbitrageDetector(const std::unordered_map<std::string, double>& rates) 
+    : exchangeRates(rates) {}
+
+void ArbitrageDetector::setBaseCurrency(const std::string& baseCurrencyCode) {
+    this -> baseCurrency = std::make_tuple(baseCurrencyCode, exchangeRates.at(baseCurrencyCode));
 }
 
-void ArbitrageDetector::findArbitrageOpportunities(const std::vector<std::string>& currencies) {
-    int n = currencies.size();
-    // Matrix to store the converted rates
-    std::vector<std::vector<double>> rateMatrix(n, std::vector<double>(n, 0.0));
+void ArbitrageDetector::findArbitrageOpportunities() {
+    for (const auto& rate1 : exchangeRates) {
+        for (const auto& rate2 : exchangeRates) {
+            if (rate1.first != rate2.first) {
+                double conversion1 = std::get<1>(baseCurrency) / rate1.second; // convert from base currency to first currency
+                double conversion2 = rate2.second; // convert from first currency to second currency
+                double conversionBack = conversion1 * conversion2 * exchangeRates.at(std::get<0>(baseCurrency)); // Convert back to base currency
 
-    // Initialize the rate matrix
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            if (i == j) {
-                rateMatrix[i][j] = 1.0;
-            } else {
-                std::string pair = currencies[i] + "-" + currencies[j];
-                if (exchangeRates.find(pair) != exchangeRates.end()) {
-                    rateMatrix[i][j] = exchangeRates[pair];
+                if (conversionBack > 1) {
+                    arbitrageOpportunities.push_back(std::make_tuple(rate1.first, rate2.first, conversionBack));
                 }
             }
         }
     }
+}
 
-    // Detect arbitrage opportunities using Bellman-Ford algorithm
-    for (int k = 0; k < n; ++k) {
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (rateMatrix[i][k] * rateMatrix[k][j] > rateMatrix[i][j]) {
-                    rateMatrix[i][j] = rateMatrix[i][k] * rateMatrix[k][j];
-                }
-            }
-        }
-    }
-
-    // Check for arbitrage opportunities
-    for (int i = 0; i < n; ++i) {
-        if (rateMatrix[i][i] > 1.0) {
-            std::cout << "Arbitrage opportunity detected with currency: " << currencies[i] << std::endl;
+void ArbitrageDetector::printArbitrageOpportunities() const {
+    if (arbitrageOpportunities.empty()) {
+        std::cout << "No arbitrage opportunities found." << std::endl;
+    } else {
+        for (const auto& opportunity : arbitrageOpportunities) {
+            std::cout << "Arbitrage Opportunity: "
+                      << std::get<0>(baseCurrency) << " -> " << std::get<0>(opportunity)
+                      << " -> " << std::get<1>(opportunity)
+                      << " -> " << std::get<0>(baseCurrency) << ", Profit: " << std::get<2>(opportunity)
+                      << std::endl;
         }
     }
 }
