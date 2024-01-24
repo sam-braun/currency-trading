@@ -11,12 +11,23 @@ void ArbitrageDetector::setBaseCurrency(const std::string& baseCurrencyCode) {
     this -> baseCurrency = std::make_tuple(baseCurrencyCode, exchangeRates.at(baseCurrencyCode));
 }
 
+void ArbitrageDetector::setCurrencies(const std::string& baseCurrencyCode, const std::vector<std::string>& currencies) {
+    this -> baseCurrency = std::make_tuple(baseCurrencyCode, exchangeRates.at(baseCurrencyCode));
+
+    for (const auto& currency : currencies) {
+        if (currency != baseCurrencyCode) {
+            this -> currencyMap[currency] = exchangeRates.at(currency);
+        }
+    }
+}
+
+
 void ArbitrageDetector::findArbitrageOpportunities() {
     double baseRate = exchangeRates.at(std::get<0>(baseCurrency));
     std::string baseCode = std::get<0>(baseCurrency);
 
-    for (const auto& rate1 : exchangeRates) {
-        for (const auto& rate2 : exchangeRates) {
+    for (const auto& rate1 : currencyMap) {
+        for (const auto& rate2 : currencyMap) {
             if (rate1.first != rate2.first && rate1.first != baseCode && rate2.first != baseCode) {
                 double conversion1 = 1 / rate1.second; // Convert base to first currency
                 double conversion2 = conversion1 / rate2.second; // Convert first to second currency
