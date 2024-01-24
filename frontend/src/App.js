@@ -6,6 +6,8 @@ import OpportunitiesList from './components/OpportunitiesList';
 function App() {
   const [currencies, setCurrencies] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
+  const [selectedCurrencies, setSelectedCurrencies] = useState([]);
+
 
   useEffect(() => {
     fetchAvailableCurrencies();
@@ -20,12 +22,12 @@ function App() {
     }
   };
 
-  const fetchArbitrageOpportunities = async (baseCurrency) => {
+  const fetchArbitrageOpportunities = async (baseCurrency, selectedCurrencies) => {
     try {
-      const response = await axios.get(`http://localhost:8080/arbitrage?baseCurrency=${baseCurrency}`);
-      setOpportunities(response.data);
+        const response = await axios.get(`http://localhost:8080/arbitrageWithSelectedCurrencies?baseCurrency=${baseCurrency}&selectedCurrencies=${selectedCurrencies.join(',')}`);
+        setOpportunities(response.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error);
     }
   };
 
