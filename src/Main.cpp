@@ -42,6 +42,29 @@ void handleGetRates(http_request request) {
     request.reply(response);
 }
 
+//NEWWWW
+
+void handleGetAvailableCurrencies(http_request request) {
+    // Your existing code to find arbitrage opportunities
+    ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=cffdfe213a72d94326edb6a8cb190076");
+    auto exchangeRates = apiClient.fetchRates();
+    
+    ArbitrageDetector arbitrageDetector(exchangeRates);
+    auto availableCurrencies = arbitrageDetector.getAvailableCurrencies();
+
+    json::value jsonResponse = json::value::array();
+    for (size_t i = 0; i < availableCurrencies.size(); ++i) {
+        jsonResponse[i] = json::value::string(availableCurrencies[i]);
+    }
+
+    http_response httpResponse(status_codes::OK);
+    httpResponse.set_body(jsonResponse.serialize(), "application/json");
+    addCorsHeaders(httpResponse);
+    request.reply(httpResponse);
+}
+
+// end NEWWWW
+
 // Endpoint to find arbitrage opportunities
 void handleFindArbitrage(http_request request) {
     // Extract base currency code from request
@@ -62,8 +85,9 @@ void handleFindArbitrage(http_request request) {
         auto& opportunity = opportunities[i];
         jsonResponse[i] = json::value::object();
         jsonResponse[i]["from"] = json::value::string(std::get<0>(opportunity));
-        jsonResponse[i]["to"] = json::value::string(std::get<1>(opportunity));
-        jsonResponse[i]["profit"] = json::value::number(std::get<2>(opportunity));
+        jsonResponse[i]["mid"] = json::value::string(std::get<1>(opportunity));
+        jsonResponse[i]["to"] = json::value::string(std::get<2>(opportunity));
+        jsonResponse[i]["profit"] = json::value::number(std::get<3>(opportunity));
     }
 
     // Prepare and send the HTTP response
@@ -89,6 +113,8 @@ int main() {
         if (!path.empty()) {
             if (path[0] == "rates") {
                 handleGetRates(request);
+            } else if (path[0] == "availableCurrencies") {
+                handleGetAvailableCurrencies(request);
             } else if (path[0] == "arbitrage") {
                 handleFindArbitrage(request);
             } else {

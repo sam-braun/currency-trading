@@ -11,14 +11,15 @@ public:
     ArbitrageDetector(const std::unordered_map<std::string, double>& rates);
     void setBaseCurrency(const std::string& baseCurrencyCode);
     void findArbitrageOpportunities();
+    std::vector<std::tuple<std::string, std::string, std::string, double>> getArbitrageOpportunities();
+    std::vector<std::string> getAvailableCurrencies();
     void printArbitrageOpportunities() const;
-    std::vector<std::tuple<std::string, std::string, double>> getArbitrageOpportunities();
 
 
 private:
     std::unordered_map<std::string, double> exchangeRates;
     std::tuple<std::string, double> baseCurrency;
-    std::vector<std::tuple<std::string, std::string, double>> arbitrageOpportunities;
+    std::vector<std::tuple<std::string, std::string, std::string, double>> arbitrageOpportunities;
 };
 
 #endif // ARBITRAGEDETECTOR_H

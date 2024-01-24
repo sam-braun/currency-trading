@@ -7,10 +7,10 @@ function OpportunitiesList({ opportunities }) {
 
     return (
         <ul>
-            {opportunities.map((opportunity, index) => {
+            {opportunities.map((opp, index) => {
                 return (
                     <li key={index}>
-                        Arbitrage Opportunity: {opportunity.from} -&gt; {opportunity.to}, Profit: {opportunity.profit}
+                        {opp.from} -&gt; {opp.mid} -&gt; {opp.to} -&gt; {opp.from}, Profit: {opp.profit}
                     </li>
                 );
             })}
