@@ -1,4 +1,3 @@
-// ArbitrageDetector.h
 #ifndef ARBITRAGEDETECTOR_H
 #define ARBITRAGEDETECTOR_H
 
@@ -10,12 +9,13 @@
 class ArbitrageDetector {
 public:
     ArbitrageDetector(const std::unordered_map<std::string, double>& rates);
+    void setBaseCurrency(const std::string& baseCurrencyCode);
     void findArbitrageOpportunities();
     void printArbitrageOpportunities() const;
-    void setBaseCurrency(const std::string& baseCurrencyCode);
 
 private:
     std::unordered_map<std::string, double> exchangeRates;
+    std::tuple<std::string, double> baseCurrency;
     std::vector<std::tuple<std::string, std::string, double>> arbitrageOpportunities;
 };
 
