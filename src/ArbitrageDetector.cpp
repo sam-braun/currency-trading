@@ -27,6 +27,10 @@ void ArbitrageDetector::findArbitrageOpportunities() {
     }
 }
 
+std::vector<std::tuple<std::string, std::string, double>> ArbitrageDetector::getArbitrageOpportunities() {
+    return arbitrageOpportunities;
+}
+
 void ArbitrageDetector::printArbitrageOpportunities() const {
     if (arbitrageOpportunities.empty()) {
         std::cout << "No arbitrage opportunities found." << std::endl;

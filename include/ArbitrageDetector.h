@@ -12,6 +12,8 @@ public:
     void setBaseCurrency(const std::string& baseCurrencyCode);
     void findArbitrageOpportunities();
     void printArbitrageOpportunities() const;
+    std::vector<std::tuple<std::string, std::string, double>> getArbitrageOpportunities();
+
 
 private:
     std::unordered_map<std::string, double> exchangeRates;
