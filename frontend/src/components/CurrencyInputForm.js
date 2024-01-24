@@ -20,6 +20,22 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
         onSubmit(baseCurrency, Object.keys(selectedCurrencies).filter(currency => selectedCurrencies[currency]));
     };
 
+    // CSS styles for currency checkbox container
+    const currencyCheckboxContainerStyle = {
+        display: 'flex',
+        flexWrap: 'wrap',
+        maxHeight: '200px', 
+        overflowY: 'auto',
+        columnGap: '10px',
+        padding: '10px'
+    };
+
+
+    const currencyCheckboxColumnStyle = {
+        width: '30%',
+        boxSizing: 'border-box'
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <label>
@@ -31,10 +47,10 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
                 </select>
             </label>
 
-            <div>
+            <div style={currencyCheckboxContainerStyle}>
                 Select target currencies:
                 {availableCurrencies.map(currency => (
-                    <div key={currency}>
+                    <div key={currency} style={currencyCheckboxColumnStyle}>
                         <input 
                             type="checkbox"
                             id={currency}
