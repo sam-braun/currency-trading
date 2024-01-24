@@ -7,6 +7,8 @@
 
 //g++ -std=c++11 -o myprogram main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -I/opt/homebrew/Cellar/jsoncpp/1.9.5/include/  
 //g++ -std=c++11 -o myprogram main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -I/opt/homebrew/Cellar/jsoncpp/1.9.5/include/ -L/opt/homebrew/Cellar/jsoncpp/1.9.5/lib -ljsoncpp
+//g++ -std=c++11 -o myprogram main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -I/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/include/ -L/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/lib -ljsoncpp
+//g++ -std=c++17 -o myprogram main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -I/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/include/ -L/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/lib -ljsoncpp
 
 
 int main() {
@@ -28,6 +30,13 @@ int main() {
         std::cout << rate.first << ": " << rate.second << std::endl;
     }
 
+    std::vector<std::string> currencyCodes;
+    for (const auto& rate : exchangeRates) {
+        currencyCodes.push_back(rate.first); // Add the currency code to the vector
+    }
+
+    std::cout << "just made currency codes";
+
 
     // // get user-selected currencies
     // std::cout << "Enter currencies (comma-separated, e.g., USD,EUR,JPY): ";
@@ -42,7 +51,7 @@ int main() {
     //     currencies.push_back(currency);
     // }
 
-    // arbitrageDetector.findArbitrageOpportunities(currencies);
+    arbitrageDetector.findArbitrageOpportunities(currencyCodes);
 
 
     /*

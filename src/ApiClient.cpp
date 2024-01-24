@@ -2,8 +2,9 @@
 #include <curl/curl.h>
 #include <sstream>
 #include <iostream>
-#include <json/json.h>
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json; // Alias for convenience
 
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *s) {
     size_t newLength = size * nmemb;
@@ -16,7 +17,6 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::stri
         return 0;
     }
 }
-
 
 ApiClient::ApiClient(const std::string& url) : m_url(url) {}
 
@@ -36,15 +36,16 @@ std::unordered_map<std::string, double> ApiClient::fetchRates() {
         curl_easy_cleanup(curl);
 
         if(res == CURLE_OK) {
-            Json::Value jsonData;
-            Json::Reader jsonReader;
-            if(jsonReader.parse(readBuffer, jsonData)) {
-                const Json::Value& symbols = jsonData["rates"];
-                for (Json::ValueConstIterator itr = symbols.begin(); itr != symbols.end(); itr++) {
-                    rates[itr.key().asString()] = itr->asDouble();
+            try {
+                auto jsonData = json::parse(readBuffer);
+                auto symbols = jsonData["rates"];
+                for (auto& [key, value] : symbols.items()) {
+                    rates[key] = value.get<double>();
                 }
+            } catch (json::parse_error& e) {
+                std::cerr << "JSON parse error: " << e.what() << std::endl;
             }
         }
     }
-    return rates; // Add this line to return the rates map
+    return rates;
 }
