@@ -15,6 +15,14 @@ using namespace web::http::experimental::listener;
 
 std::unique_ptr<http_listener> listener;
 
+
+// cross-origin resource sharing - CORS
+void addCorsHeaders(http_response& response) {
+    response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
+    response.headers().add(U("Access-Control-Allow-Methods"), U("GET, POST, OPTIONS"));
+    response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"));
+}
+
 // Endpoint to fetch exchange rates
 void handleGetRates(http_request request) {
     // Your existing code to fetch rates
@@ -23,13 +31,15 @@ void handleGetRates(http_request request) {
     ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=" + accessKey);
     auto exchangeRates = apiClient.fetchRates();
 
-    // Convert rates to JSON and send response
-    json::value response = json::value::object();
+    json::value jsonResponse = json::value::object();
     for (const auto& rate : exchangeRates) {
-        response[rate.first] = json::value::number(rate.second);
+        jsonResponse[rate.first] = json::value::number(rate.second);
     }
 
-    request.reply(status_codes::OK, response);
+    http_response response(status_codes::OK);
+    response.set_body(jsonResponse.serialize(), "application/json");
+    addCorsHeaders(response);
+    request.reply(response);
 }
 
 // Endpoint to find arbitrage opportunities
@@ -45,25 +55,35 @@ void handleFindArbitrage(http_request request) {
     arbitrageDetector.setBaseCurrency(baseCurrencyCode);
     arbitrageDetector.findArbitrageOpportunities();
 
-    // Convert opportunities to JSON and send response
-    json::value response = json::value::array();
+    // Convert opportunities to JSON
+    json::value jsonResponse = json::value::array();
     const auto& opportunities = arbitrageDetector.getArbitrageOpportunities();
     for (size_t i = 0; i < opportunities.size(); ++i) {
         auto& opportunity = opportunities[i];
-        response[i] = json::value::object();
-        response[i]["from"] = json::value::string(std::get<0>(opportunity));
-        response[i]["to"] = json::value::string(std::get<1>(opportunity));
-        response[i]["profit"] = json::value::number(std::get<2>(opportunity));
+        jsonResponse[i] = json::value::object();
+        jsonResponse[i]["from"] = json::value::string(std::get<0>(opportunity));
+        jsonResponse[i]["to"] = json::value::string(std::get<1>(opportunity));
+        jsonResponse[i]["profit"] = json::value::number(std::get<2>(opportunity));
     }
 
-    request.reply(status_codes::OK, response);
+    // Prepare and send the HTTP response
+    http_response response(status_codes::OK);
+    response.set_body(jsonResponse.serialize(), "application/json");
+    addCorsHeaders(response);
+    request.reply(response);
 }
 
+
 int main() {
-    // Set up the HTTP listener
     listener = std::make_unique<http_listener>(U("http://localhost:8080"));
 
-    // Define the endpoints
+    listener->support(methods::OPTIONS, [](http_request request) {
+        http_response response(status_codes::OK);
+        addCorsHeaders(response);
+        request.reply(response);
+    });
+
+    // define endpoints
     listener->support(methods::GET, [](http_request request) {
         auto path = uri::split_path(uri::decode(request.relative_uri().path()));
         if (!path.empty()) {
