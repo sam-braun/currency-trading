@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const PAGE_SIZE = 20; // Number of opportunities per page
+const MAX_PAGE_BUTTONS = 10; // Maximum number of page buttons to display
 
 function OpportunitiesList({ opportunities }) {
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,6 +18,57 @@ function OpportunitiesList({ opportunities }) {
         setCurrentPage(pageNumber);
     };
 
+    const renderPageButtons = () => {
+        let buttons = [];
+        let startPage, endPage;
+
+        if (totalPages <= MAX_PAGE_BUTTONS) {
+            startPage = 1;
+            endPage = totalPages;
+        } else {
+            if (currentPage <= 6) {
+                startPage = 1;
+                endPage = 9;
+            } else if (currentPage + 4 >= totalPages) {
+                startPage = totalPages - 8;
+                endPage = totalPages;
+            } else {
+                startPage = currentPage - 4;
+                endPage = currentPage + 4;
+            }
+        }
+
+        if (startPage > 1) {
+            buttons.push(renderButton(1));
+            if (startPage > 2) {
+                buttons.push('...');
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            buttons.push(renderButton(i));
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                buttons.push('...');
+            }
+            buttons.push(renderButton(totalPages));
+        }
+
+        return buttons;
+    };
+
+    const renderButton = (pageNumber) => (
+        <button
+            key={pageNumber}
+            onClick={() => goToPage(pageNumber)}
+            disabled={pageNumber === currentPage}
+        >
+            {pageNumber}
+        </button>
+    );
+
     return (
         <>
             <ul>
@@ -27,15 +79,7 @@ function OpportunitiesList({ opportunities }) {
                 ))}
             </ul>
             <div>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-                    <button
-                        key={pageNumber}
-                        onClick={() => goToPage(pageNumber)}
-                        disabled={pageNumber === currentPage}
-                    >
-                        {pageNumber}
-                    </button>
-                ))}
+                {renderPageButtons()}
             </div>
         </>
     );
