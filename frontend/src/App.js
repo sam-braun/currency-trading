@@ -9,6 +9,7 @@ function App() {
   const fetchArbitrageOpportunities = async (baseCurrency) => {
     try {
       const response = await axios.get(`http://localhost:8080/arbitrage?baseCurrency=${baseCurrency}`);
+      console.log(response.data);
       setOpportunities(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
