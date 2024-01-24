@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function CurrencyInputForm({ onSubmit, availableCurrencies }) {
     const [baseCurrency, setBaseCurrency] = useState('');
     const [selectedCurrencies, setSelectedCurrencies] = useState({});
+    const [selectAll, setSelectAll] = useState(false);
+
+    useEffect(() => {
+        const updatedSelectedCurrencies = availableCurrencies.reduce((acc, currency) => {
+            acc[currency] = selectAll;
+            return acc;
+        }, {});
+        setSelectedCurrencies(updatedSelectedCurrencies);
+    }, [selectAll, availableCurrencies]);
 
     const handleBaseCurrencyChange = (event) => {
         setBaseCurrency(event.target.value);
@@ -15,6 +24,10 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
         }));
     };
 
+    const handleSelectAllCurrencies = () => {
+        setSelectAll(!selectAll);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(baseCurrency, Object.keys(selectedCurrencies).filter(currency => selectedCurrencies[currency]));
@@ -24,32 +37,37 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
     const currencyCheckboxContainerStyle = {
         display: 'flex',
         flexWrap: 'wrap',
-        maxHeight: '200px', 
+        maxHeight: '200px',
         overflowY: 'auto',
         columnGap: '10px',
         padding: '10px'
     };
-
 
     const currencyCheckboxColumnStyle = {
         width: '30%',
         boxSizing: 'border-box'
     };
 
+    // Sort availableCurrencies alphabetically
+    const sortedCurrencies = [...availableCurrencies].sort();
+
     return (
         <form onSubmit={handleSubmit}>
             <label>
-                Select base currency:
+                Select base currency: {' '}
                 <select value={baseCurrency} onChange={handleBaseCurrencyChange}>
-                    {availableCurrencies.map(currency => (
+                    {sortedCurrencies.map(currency => (
                         <option key={currency} value={currency}>{currency}</option>
                     ))}
                 </select>
             </label>
+            <br />
 
-            <div style={currencyCheckboxContainerStyle}>
+            <label>
                 Select target currencies:
-                {availableCurrencies.map(currency => (
+            </label>
+            <div style={currencyCheckboxContainerStyle}>
+                {sortedCurrencies.map(currency => (
                     <div key={currency} style={currencyCheckboxColumnStyle}>
                         <input 
                             type="checkbox"
@@ -62,7 +80,15 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
                 ))}
             </div>
 
-            <button type="submit">Find Arbitrage Opportunities</button>
+            <div style={{ marginTop: '10px' }}>
+                <button type="button" onClick={handleSelectAllCurrencies}>
+                    {selectAll ? 'Deselect All Currencies' : 'Select All Currencies'}
+                </button>
+            </div>
+
+            <div style={{ marginTop: '10px' }}>
+                <button type="submit">Find Arbitrage Opportunities</button>
+            </div>
         </form>
     );
 }
