@@ -24,7 +24,7 @@ function MenuBar({ availableCurrencies, onCurrencySelect }) {
     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', background: '#eee', alignItems: 'center' }}>
       <div>{currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}</div>
       <select onChange={handleCurrencyChange} value={baseCurrency}>
-        <option value="" disabled>Select a currency</option>
+        <option value="" >Select a currency</option>
         {availableCurrencies.map((currency) => (
           <option key={currency.code} value={currency.code}>
             {currency.code} - {currency.name}

@@ -42,7 +42,7 @@ function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
         boxSizing: 'border-box'
     };
 
-    // Sort availableCurrencies alphabetically using the code property
+    // sort availableCurrencies alphabetically using the code property
     const sortedCurrencies = [...availableCurrencies].sort((a, b) => a.code.localeCompare(b.code));
 
     return (
