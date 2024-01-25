@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is an Arbitrage Opportunity Detector that analyzes exchange rates to identify potential arbitrage opportunities across different currencies. It includes a backend implemented in C++ using the C++ REST SDK (cpprest) for handling HTTP requests and a frontend built with React.
+Triangular arbitrage is a financial strategy that takes advantage of exchange rate discrepancies between three currencies to generate a risk-free profit. This project is an Arbitrage Opportunity Detector that analyzes exchange rates to identify potential arbitrage opportunities across different currencies. It includes a backend implemented in C++ using the C++ REST SDK (cpprest) for handling HTTP requests and a frontend built with React.
 
 ## Table of Contents
 
