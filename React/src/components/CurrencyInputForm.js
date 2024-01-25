@@ -20,13 +20,23 @@ function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
     };
 
     const handleSelectAllCurrencies = () => {
-        setSelectAll(!selectAll);
+        const newSelectAll = !selectAll;
+        setSelectAll(newSelectAll);
+        setSelectedCurrencies(availableCurrencies.reduce((acc, currency) => {
+            acc[currency.code] = newSelectAll;
+            return acc;
+        }, {}));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(baseCurrency, Object.keys(selectedCurrencies).filter(currencyCode => selectedCurrencies[currencyCode]));
+        const selectedCurrencyCodes = Object.keys(selectedCurrencies).filter(currencyCode => selectedCurrencies[currencyCode]);
+        if (baseCurrency && selectedCurrencyCodes.length > 0) {
+            onSubmit(baseCurrency, selectedCurrencyCodes);
+        }
     };
+
+    const isSubmitDisabled = !baseCurrency || Object.values(selectedCurrencies).every(v => !v);
 
     const currencyCheckboxContainerStyle = {
         display: 'flex',
@@ -42,7 +52,6 @@ function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
         boxSizing: 'border-box'
     };
 
-    // sort availableCurrencies alphabetically using the code property
     const sortedCurrencies = [...availableCurrencies].sort((a, b) => a.code.localeCompare(b.code));
 
     return (
@@ -72,7 +81,7 @@ function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
             </div>
 
             <div style={{ marginTop: '10px' }}>
-                <button type="submit">Find Arbitrage Opportunities</button>
+                <button type="submit" disabled={isSubmitDisabled}>Find Arbitrage Opportunities</button>
             </div>
         </form>
     );

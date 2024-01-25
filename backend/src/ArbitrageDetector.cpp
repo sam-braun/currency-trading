@@ -5,7 +5,13 @@
 #include <unordered_map>
 
 ArbitrageDetector::ArbitrageDetector(const std::unordered_map<std::string, double> &rates)
-    : exchangeRates(rates) {}
+    : exchangeRates(rates)
+{
+    if (exchangeRates.empty())
+    {
+        std::cerr << "Error: Exchange rates map is empty." << std::endl;
+    }
+}
 
 void ArbitrageDetector::setBaseCurrency(const std::string &baseCurrencyCode)
 {
