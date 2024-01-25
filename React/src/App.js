@@ -3,6 +3,7 @@ import axios from 'axios';
 import CurrencyInputForm from './components/CurrencyInputForm';
 import OpportunitiesList from './components/OpportunitiesList';
 import MenuBar from './components/MenuBar';
+import './App.css';
 
 function App() {
   const [currencies, setCurrencies] = useState([]);
@@ -36,11 +37,15 @@ function App() {
   };
 
   return (
-    <div>
-      <center><h1>Arbitrage Opportunities Finder</h1></center>
-      <MenuBar availableCurrencies={currencies} onCurrencySelect={handleMenuCurrencyChange} />
-      <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} baseCurrency={menuCurrency} />
-      <OpportunitiesList opportunities={opportunities} />
+    <div className="app">
+      <center><h1>Arbitrage Opportunity Detector</h1></center>
+      <div className="header">
+        <MenuBar availableCurrencies={currencies} onCurrencySelect={handleMenuCurrencyChange} />
+      </div>
+      <div className="content-container">
+        <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} baseCurrency={menuCurrency} />
+        <OpportunitiesList opportunities={opportunities} />
+      </div>
     </div>
   );
 }

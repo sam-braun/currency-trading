@@ -6,7 +6,7 @@
 #include "../include/ApiClient.h"
 #include "../include/ArbitrageDetector.h"
 
-// g++ -std=c++17 -o arb_backend5 main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -lboost_system -lssl -lcrypto -lcpprest -I/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/include/ -L/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/lib -ljsoncpp
+// g++ -std=c++17 -o arb_backend0 main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -lboost_system -lssl -lcrypto -lcpprest -I/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/include/ -L/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/lib -ljsoncpp
 // access_key1 = "cffdfe213a72d94326edb6a8cb190076"
 
 using namespace web;
@@ -83,37 +83,44 @@ void handleGetRates(http_request request)
 
 void handleGetAvailableCurrencies(http_request request)
 {
-    try
-    {
-        std::string csvFilePath = "../resources/currency_list.csv"; // Path to the CSV file
-        auto currencyInfoMap = readCurrenciesFromCSV(csvFilePath);
+    // Existing code to find arbitrage opportunities
+    std::string accessKey = "7f09f801121498f7c9325de9d3038e49";
+    ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=" + accessKey);
+    auto exchangeRates = apiClient.fetchRates();
 
-        json::value jsonResponse = json::value::array();
-        size_t i = 0;
-        for (const auto &currency : currencyInfoMap)
+    ArbitrageDetector arbitrageDetector(exchangeRates);
+    auto availableCurrencies = arbitrageDetector.getAvailableCurrencies();
+
+    std::unordered_map<std::string, std::tuple<std::string, std::string, std::string>> currencyInfoMap;
+    std::ifstream file("../resources/currency_list.csv");
+    std::string line;
+    while (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        std::string code, name, symbol, emoji;
+        std::getline(iss, code, ',');
+        std::getline(iss, name, ',');
+        std::getline(iss, symbol, ',');
+        std::getline(iss, emoji, ',');
+        currencyInfoMap[code] = std::make_tuple(name, symbol, emoji);
+    }
+
+    json::value jsonResponse = json::value::array();
+    for (size_t i = 0; i < availableCurrencies.size(); ++i)
+    {
+        jsonResponse[i]["code"] = json::value::string(availableCurrencies[i]);
+        if (currencyInfoMap.find(availableCurrencies[i]) != currencyInfoMap.end())
         {
-            jsonResponse[i]["code"] = json::value::string(currency.first);
-            jsonResponse[i]["name"] = json::value::string(std::get<0>(currency.second));
-            jsonResponse[i]["symbol"] = json::value::string(std::get<1>(currency.second));
-            jsonResponse[i]["emoji"] = json::value::string(std::get<2>(currency.second));
-            ++i;
+            jsonResponse[i]["name"] = json::value::string(std::get<0>(currencyInfoMap[availableCurrencies[i]]));
+            jsonResponse[i]["symbol"] = json::value::string(std::get<1>(currencyInfoMap[availableCurrencies[i]]));
+            jsonResponse[i]["emoji"] = json::value::string(std::get<2>(currencyInfoMap[availableCurrencies[i]]));
         }
-
-        http_response httpResponse(status_codes::OK);
-        httpResponse.set_body(jsonResponse.serialize(), "application/json");
-        addCorsHeaders(httpResponse);
-        request.reply(httpResponse);
     }
-    catch (const std::exception &e)
-    {
-        // Log the exception, prepare an error response
-        std::cerr << "Error: " << e.what() << std::endl;
 
-        http_response errorResponse(status_codes::InternalError);
-        addCorsHeaders(errorResponse); // Ensure CORS headers are set even in error response
-        errorResponse.set_body("Internal Server Error");
-        request.reply(errorResponse);
-    }
+    http_response httpResponse(status_codes::OK);
+    httpResponse.set_body(jsonResponse.serialize(), "application/json");
+    addCorsHeaders(httpResponse);
+    request.reply(httpResponse);
 }
 
 // end NEWWWW

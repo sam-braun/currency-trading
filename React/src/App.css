@@ -13,8 +13,12 @@
   }
 }
 
+.currency-select {
+  margin-left: 20px;
+}
+
 .App-header {
-  background-color: #282c34;
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,6 +30,49 @@
 
 .App-link {
   color: #61dafb;
+}
+
+
+.header {
+  background-color: #123456; /* replace with the dark blue color from the image */
+  color: white;
+  padding: 20px 0;
+}
+
+
+.menu-bar-content {
+  background-color: #345678;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.currency-input-section {
+  background-color: #123456;
+  padding: 0px;
+  color: white;
+}
+
+.opportunities-section {
+  background-color: #DDEEFF;
+  padding: 20px;
+}
+
+.content-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.currency-input-section {
+  flex: 1;
+  max-width: 40%;
+  overflow-y: auto;
+}
+
+.opportunities-list-section {
+  flex: 1;
+  max-width: 60%;
 }
 
 @keyframes App-logo-spin {

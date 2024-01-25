@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
+function CurrencyInputForm({ onSubmit, availableCurrencies }) {
     const [selectedCurrencies, setSelectedCurrencies] = useState({});
     const [selectAll, setSelectAll] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [baseCurrency, setBaseCurrency] = useState('');
 
     useEffect(() => {
         const updatedSelectedCurrencies = availableCurrencies.reduce((acc, currency) => {
@@ -28,6 +30,14 @@ function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
         }, {}));
     };
 
+    const handleBaseCurrencyChange = (e) => {
+        setBaseCurrency(e.target.value);
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const selectedCurrencyCodes = Object.keys(selectedCurrencies).filter(currencyCode => selectedCurrencies[currencyCode]);
@@ -38,31 +48,52 @@ function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
 
     const isSubmitDisabled = !baseCurrency || Object.values(selectedCurrencies).every(v => !v);
 
+    const filteredCurrencies = searchTerm
+        ? availableCurrencies.filter(currency =>
+            currency.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            currency.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : availableCurrencies;
+
     const currencyCheckboxContainerStyle = {
-        display: 'flex',
-        flexWrap: 'wrap',
-        maxHeight: '200px',
+        height: 'calc(100vh - 420px)',
         overflowY: 'auto',
-        columnGap: '10px',
         padding: '10px'
     };
 
-    const currencyCheckboxColumnStyle = {
-        width: '30%',
-        boxSizing: 'border-box'
+    const inputStyle = {
+        width: '100%',
+        padding: '10px',
+        margin: '10px 0'
     };
-
-    const sortedCurrencies = [...availableCurrencies].sort((a, b) => a.code.localeCompare(b.code));
 
     return (
         <form onSubmit={handleSubmit}>
+            <label>
+                Select a base currency:
+                <select onChange={handleBaseCurrencyChange} value={baseCurrency} style={inputStyle}>
+                    <option value="">Select a currency</option>
+                    {availableCurrencies.map((currency) => (
+                        <option key={currency.code} value={currency.code}>
+                            {currency.code} - {currency.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
             <br />
             <label>
-                Select target currencies:
+                Choose additional currencies:
             </label>
+            <input 
+                type="text"
+                placeholder="Search currencies..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                style={inputStyle}
+            />
             <div style={currencyCheckboxContainerStyle}>
-                {sortedCurrencies.map(currency => (
-                    <div key={currency.code} style={currencyCheckboxColumnStyle}>
+                {filteredCurrencies.map(currency => (
+                    <div key={currency.code}>
                         <input 
                             type="checkbox"
                             id={currency.code}
