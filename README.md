@@ -21,18 +21,21 @@ The project is divided into several key components:
 - C++ REST SDK (cpprest)
 - nlohmann/json for JSON parsing
 
+### Exchange Rate API
+
+You will need to create your own API access token. Here are the instructions:
+
+1. Visit https://exchangeratesapi.io.
+2. Create an account.
+3. Navigate to your dashboard and copy your API access token.
+4. Paste the access token in the access_token fields in `main.cpp`.
+
 ### Key Functions
 
 - `handleGetRates`: Fetches exchange rates.
 - `handleGetAvailableCurrencies`: Provides a list of available currencies.
 - `handleFindArbitrage`: Finds arbitrage opportunities for a given base currency.
 - `handleFindArbitrageWithSelectedCurrencies`: Finds arbitrage opportunities for selected currencies.
-
-### Setup
-
-1. Install C++ REST SDK and other required libraries.
-2. Compile the C++ backend.
-3. Run the backend server.
 
 ## Frontend
 
@@ -50,13 +53,14 @@ The project is divided into several key components:
 
 ### Setup
 
-1. Install Node.js and npm.
-2. Navigate to the frontend directory and run `npm install` to install dependencies.
-3. Run `npm start` to launch the React application.
+1. Install C++ REST SDK and other required libraries (using a package manager like vcpkg is recommended).
+2. Install Node.js and npm.
+3. Customize `start.sh` for your machine's package locations.
 
 ## Usage
 
-1. Start the backend server.
-2. Open the frontend application in a web browser.
-3. Select a base currency and additional currencies to calculate arbitrage.
-4. Click 'Find Arbitrage Opportunities' to view the results.
+1. Run `bash start.sh` to compile the backend, and lauch the backend and React app.
+2. Start the backend server.
+3. Open the frontend application in a web browser.
+4. Select a base currency and additional currencies to calculate arbitrage.
+5. Click 'Find Arbitrage Opportunities' to view the results.
