@@ -34,7 +34,6 @@ You will need to create your own API access token. Here are the instructions:
 
 - `handleGetRates`: Fetches exchange rates.
 - `handleGetAvailableCurrencies`: Provides a list of available currencies.
-- `handleFindArbitrage`: Finds arbitrage opportunities for a given base currency.
 - `handleFindArbitrageWithSelectedCurrencies`: Finds arbitrage opportunities for selected currencies.
 
 ## Frontend
