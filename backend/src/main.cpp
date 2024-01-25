@@ -10,6 +10,9 @@ using namespace web;
 using namespace web::http;
 using namespace web::http::experimental::listener;
 
+// replace your exchangerates.io access key here
+std::string accessKey = "7f09f801121498f7c9325de9d3038e49";
+
 std::unique_ptr<http_listener> listener;
 
 // set CORS headers for HTTP response
@@ -38,9 +41,6 @@ std::vector<std::string> parseSelectedCurrencies(const std::string &selectedCurr
 // handle HTTP GET request to fetch exchange rates
 void handleGetRates(http_request request)
 {
-    // Your existing code to fetch rates
-    std::string accessKey = "7f09f801121498f7c9325de9d3038e49"; // Fix the typo in "std:string"
-
     ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=" + accessKey);
     auto exchangeRates = apiClient.fetchRates();
 
@@ -59,8 +59,6 @@ void handleGetRates(http_request request)
 // handle HTTP GET request to get available currencies
 void handleGetAvailableCurrencies(http_request request)
 {
-    // Existing code to find arbitrage opportunities
-    std::string accessKey = "7f09f801121498f7c9325de9d3038e49";
     ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=" + accessKey);
     auto exchangeRates = apiClient.fetchRates();
 
@@ -103,11 +101,9 @@ void handleGetAvailableCurrencies(http_request request)
 void handleFindArbitrage(http_request request)
 {
     std::cout << "handleFindArbitrage" << std::endl;
-    // Extract base currency code from request
     auto query = uri::split_query(request.request_uri().query());
     std::string baseCurrencyCode = query["baseCurrency"];
 
-    // Your existing code to find arbitrage opportunities
     std::string accessKey = "7f09f801121498f7c9325de9d3038e49";
     ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=" + accessKey);
     auto exchangeRates = apiClient.fetchRates();
@@ -115,7 +111,7 @@ void handleFindArbitrage(http_request request)
     arbitrageDetector.setBaseCurrency(baseCurrencyCode);
     arbitrageDetector.findArbitrageOpportunities();
 
-    // Convert opportunities to JSON
+    // convert opportunities to JSON
     json::value jsonResponse = json::value::array();
     const auto &opportunities = arbitrageDetector.getArbitrageOpportunities();
     for (size_t i = 0; i < opportunities.size(); ++i)
@@ -128,7 +124,7 @@ void handleFindArbitrage(http_request request)
         jsonResponse[i]["profit"] = json::value::number(std::get<3>(opportunity));
     }
 
-    // Prepare and send the HTTP response
+    // prepare and send HTTP response
     http_response response(status_codes::OK);
     response.set_body(jsonResponse.serialize(), "application/json");
     addCorsHeaders(response);
