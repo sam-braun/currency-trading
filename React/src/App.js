@@ -37,14 +37,16 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div>
       <center><h1>Arbitrage Opportunity Detector</h1></center>
-      <div className="header">
-        <MenuBar availableCurrencies={currencies} onCurrencySelect={handleMenuCurrencyChange} />
-      </div>
-      <div className="content-container">
-        <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} baseCurrency={menuCurrency} />
-        <OpportunitiesList opportunities={opportunities} />
+      <MenuBar availableCurrencies={currencies} onCurrencySelect={handleMenuCurrencyChange} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
+        <div style={{ flex: '0 0 30%', marginRight: '10px' }}> {/* Changed this line */}
+          <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} />
+        </div>
+        <div style={{ flex: '0 0 70%', marginLeft: '10px' }}> {/* Changed this line */}
+          <OpportunitiesList opportunities={opportunities} />
+        </div>
       </div>
     </div>
   );

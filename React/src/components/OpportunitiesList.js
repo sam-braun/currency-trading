@@ -59,6 +59,15 @@ function OpportunitiesList({ opportunities }) {
         return buttons;
     };
 
+    const tableStyle = {
+        margin: '0 auto', // centers table
+        borderCollapse: 'collapse'
+    };
+
+    const cellStyle = {
+        padding: '7px 20px' // adds space between columns
+    };
+
     const renderButton = (pageNumber) => (
         <button
             key={pageNumber}
@@ -69,25 +78,35 @@ function OpportunitiesList({ opportunities }) {
         </button>
     );
 
+    const paginationStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '10px',
+        marginTop: '10px'
+    };
+
     return (
         <>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Opportunity</th>
-                        <th>Profit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentOpportunities.map((opp, index) => (
-                        <tr key={index}>
-                            <td>{opp.from} &#8594; {opp.mid} &#8594; {opp.to} &#8594; {opp.from}</td>
-                            <td>{opp.profit}</td>
+            <div style={{ overflowX: 'auto' }}> {/* Wrapper to handle overflow and centering */}
+                <table style={tableStyle}>
+                    <thead>
+                        <tr>
+                            <th style={cellStyle}>Opportunity</th>
+                            <th style={cellStyle}>Profit</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div>
+                    </thead>
+                    <tbody>
+                        {currentOpportunities.map((opp, index) => (
+                            <tr key={index}>
+                                <td style={cellStyle}>{opp.from} &#8594; {opp.mid} &#8594; {opp.to} &#8594; {opp.from}</td>
+                                <td style={cellStyle}>{parseFloat(opp.profit).toFixed(2)}</td> {/* Round to 2 decimal points */}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div style={paginationStyle}>
                 {renderPageButtons()}
             </div>
         </>
