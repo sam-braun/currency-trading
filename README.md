@@ -6,9 +6,9 @@ This project is an Arbitrage Opportunity Detector that analyzes exchange rates t
 
 ## Table of Contents
 
-1. [Requirements and Dependencies](#Requirements and Dependencies)
-2. [Backend Key Functions](#Backend Key Functions)
-3. [Frontend Components](#Frontend Components)
+1. [Requirements and Dependencies](#Requirements)
+2. [Backend Key Functions](#Backend)
+3. [Frontend Components](#Frontend)
 4. [Setup](#Setup)
 5. [Usage](#Usage)
 
