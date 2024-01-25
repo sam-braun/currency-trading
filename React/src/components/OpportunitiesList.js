@@ -8,7 +8,7 @@ function OpportunitiesList({ opportunities }) {
     const totalPages = Math.ceil(opportunities.length / PAGE_SIZE);
 
     if (!opportunities.length) {
-        return <p>No arbitrage opportunities found.</p>;
+        return <p>No arbitrage opportunities found yet.. Please try selecting more currency demoninations.</p>;
     }
 
     const startIndex = (currentPage - 1) * PAGE_SIZE;

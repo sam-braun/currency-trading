@@ -3,12 +3,13 @@ import axios from 'axios';
 import CurrencyInputForm from './components/CurrencyInputForm';
 import OpportunitiesList from './components/OpportunitiesList';
 import MenuBar from './components/MenuBar';
+import InstructionModal from './components/InstructionModal'; // Import the InstructionModal component
 import './App.css';
 
 function App() {
   const [currencies, setCurrencies] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
-  // const [menuCurrency, setMenuCurrency] = useState('');
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     fetchAvailableCurrencies();
@@ -32,14 +33,23 @@ function App() {
     }
   };
 
-  // const handleMenuCurrencyChange = (currency) => {
-  //   setMenuCurrency(currency);
-  // };
+  const handleCloseInstructions = () => {
+    setShowInstructions(false);
+  };
+
+  const handleShowInstructions = () => {
+    setShowInstructions(true);
+  };
+
 
   return (
     <div>
+      {showInstructions && <InstructionModal onClose={handleCloseInstructions} />}
       <center><h1>Arbitrage Opportunity Detector</h1></center>
-      <MenuBar/>
+      <MenuBar 
+        availableCurrencies={currencies} 
+        onShowInstructions={handleShowInstructions} // Add this prop
+      />
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
         <div style={{ flex: '0 0 30%', marginRight: '50px' }}> {/* Changed this line */}
           <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} />
