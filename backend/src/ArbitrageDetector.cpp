@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
+// initializes with exchange rates
 ArbitrageDetector::ArbitrageDetector(const std::unordered_map<std::string, double> &rates)
     : exchangeRates(rates)
 {
@@ -13,11 +14,7 @@ ArbitrageDetector::ArbitrageDetector(const std::unordered_map<std::string, doubl
     }
 }
 
-void ArbitrageDetector::setBaseCurrency(const std::string &baseCurrencyCode)
-{
-    this->baseCurrency = std::make_tuple(baseCurrencyCode, exchangeRates.at(baseCurrencyCode));
-}
-
+// set base currency and filter selected currencies for arbitrage detection
 void ArbitrageDetector::setCurrencies(const std::string &baseCurrencyCode, const std::vector<std::string> &currencies)
 {
     this->baseCurrency = std::make_tuple(baseCurrencyCode, exchangeRates.at(baseCurrencyCode));
@@ -31,6 +28,7 @@ void ArbitrageDetector::setCurrencies(const std::string &baseCurrencyCode, const
     }
 }
 
+// find arbitrage opportunities among set currencies
 void ArbitrageDetector::findArbitrageOpportunities()
 {
     double baseRate = exchangeRates.at(std::get<0>(baseCurrency));
@@ -48,8 +46,6 @@ void ArbitrageDetector::findArbitrageOpportunities()
 
                 if (conversionBackToBase > 1)
                 {
-                    // std::tuple<std::string, std::string, std::string> emojis = std::make_tuple()
-
                     arbitrageOpportunities.push_back(std::make_tuple(baseCode, rate1.first, rate2.first, conversionBackToBase));
                 }
             }
@@ -57,6 +53,7 @@ void ArbitrageDetector::findArbitrageOpportunities()
     }
 }
 
+// retrieve list of all available currencies
 std::vector<std::string> ArbitrageDetector::getAvailableCurrencies()
 {
     std::vector<std::string> availableCurrencies;
@@ -67,9 +64,18 @@ std::vector<std::string> ArbitrageDetector::getAvailableCurrencies()
     return availableCurrencies;
 }
 
+// get detected arbitrage opportunities
 std::vector<std::tuple<std::string, std::string, std::string, double>> ArbitrageDetector::getArbitrageOpportunities()
 {
     return arbitrageOpportunities;
+}
+
+// legacy methods
+
+// set base currency for arbitrage calculation
+void ArbitrageDetector::setBaseCurrency(const std::string &baseCurrencyCode)
+{
+    this->baseCurrency = std::make_tuple(baseCurrencyCode, exchangeRates.at(baseCurrencyCode));
 }
 
 void ArbitrageDetector::printArbitrageOpportunities() const

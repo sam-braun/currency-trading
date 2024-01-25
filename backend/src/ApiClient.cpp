@@ -16,13 +16,14 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::stri
     }
     catch (std::bad_alloc &e)
     {
-        // Handle memory problem
         return 0;
     }
 }
 
+// initialize ApiClient
 ApiClient::ApiClient(const std::string &url) : m_url(url) {}
 
+// fetch exchange rates
 std::unordered_map<std::string, double> ApiClient::fetchRates()
 {
     CURL *curl;

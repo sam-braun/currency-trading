@@ -6,16 +6,13 @@
 #include "../include/ApiClient.h"
 #include "../include/ArbitrageDetector.h"
 
-// g++ -std=c++17 -o arb_backend0 main.cpp ApiClient.cpp ArbitrageDetector.cpp -lcurl -lboost_system -lssl -lcrypto -lcpprest -I/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/include/ -L/Users/samuelbraun/Desktop/vcpkg/installed/arm64-osx/lib -ljsoncpp
-// access_key1 = "cffdfe213a72d94326edb6a8cb190076"
-
 using namespace web;
 using namespace web::http;
 using namespace web::http::experimental::listener;
 
 std::unique_ptr<http_listener> listener;
 
-// cross-origin resource sharing - CORS
+// set CORS headers for HTTP response
 void addCorsHeaders(http_response &response)
 {
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
@@ -23,27 +20,7 @@ void addCorsHeaders(http_response &response)
     response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"));
 }
 
-// helper to manage csv
-std::unordered_map<std::string, std::tuple<std::string, std::string, std::string>> readCurrenciesFromCSV(const std::string &filePath)
-{
-    std::unordered_map<std::string, std::tuple<std::string, std::string, std::string>> currencyInfoMap;
-    std::ifstream file(filePath);
-    std::string line;
-
-    while (std::getline(file, line))
-    {
-        std::istringstream iss(line);
-        std::string code, name, symbol, emoji;
-        std::getline(iss, code, ',');
-        std::getline(iss, name, ',');
-        std::getline(iss, symbol, ',');
-        std::getline(iss, emoji, ',');
-        currencyInfoMap[code] = std::make_tuple(name, symbol, emoji);
-    }
-
-    return currencyInfoMap;
-}
-
+// split a string of currencies separated by commas into a vector
 std::vector<std::string> parseSelectedCurrencies(const std::string &selectedCurrenciesStr)
 {
     std::vector<std::string> selectedCurrencies;
@@ -58,7 +35,7 @@ std::vector<std::string> parseSelectedCurrencies(const std::string &selectedCurr
     return selectedCurrencies;
 }
 
-// Endpoint to fetch exchange rates
+// handle HTTP GET request to fetch exchange rates
 void handleGetRates(http_request request)
 {
     // Your existing code to fetch rates
@@ -79,8 +56,7 @@ void handleGetRates(http_request request)
     request.reply(response);
 }
 
-// NEWWWW
-
+// handle HTTP GET request to get available currencies
 void handleGetAvailableCurrencies(http_request request)
 {
     // Existing code to find arbitrage opportunities
@@ -123,9 +99,7 @@ void handleGetAvailableCurrencies(http_request request)
     request.reply(httpResponse);
 }
 
-// end NEWWWW
-
-// Endpoint to find arbitrage opportunities
+// handle HTTP GET request to find arbitrage opportunities
 void handleFindArbitrage(http_request request)
 {
     std::cout << "handleFindArbitrage" << std::endl;
@@ -161,16 +135,16 @@ void handleFindArbitrage(http_request request)
     request.reply(response);
 }
 
+// handle HTTP GET request to find arbitrage with selected currencies
 void handleFindArbitrageWithSelectedCurrencies(http_request request)
 {
+    // run the listener and wait for input to stop
     try
     {
-        // Extract base currency and selected currencies from request
         auto query = uri::split_query(request.request_uri().query());
         std::string baseCurrencyCode = query["baseCurrency"];
         std::vector<std::string> selectedCurrencies = parseSelectedCurrencies(query["selectedCurrencies"]);
 
-        // Your existing code to find arbitrage opportunities
         std::string accessKey = "7f09f801121498f7c9325de9d3038e49";
         ApiClient apiClient("http://api.exchangeratesapi.io/v1/latest?access_key=" + accessKey);
         auto exchangeRates = apiClient.fetchRates();
@@ -179,7 +153,7 @@ void handleFindArbitrageWithSelectedCurrencies(http_request request)
         arbitrageDetector.setCurrencies(baseCurrencyCode, selectedCurrencies);
         arbitrageDetector.findArbitrageOpportunities();
 
-        // Convert opportunities to JSON
+        // convert opportunities to JSON
         json::value jsonResponse = json::value::array();
         const auto &opportunities = arbitrageDetector.getArbitrageOpportunities();
         for (size_t i = 0; i < opportunities.size(); ++i)
@@ -192,7 +166,7 @@ void handleFindArbitrageWithSelectedCurrencies(http_request request)
             jsonResponse[i]["profit"] = json::value::number(std::get<3>(opportunity));
         }
 
-        // Prepare and send the HTTP response
+        // prepare and send the HTTP response
         http_response response(status_codes::OK);
         response.set_body(jsonResponse.serialize(), "application/json");
         addCorsHeaders(response);
@@ -200,7 +174,7 @@ void handleFindArbitrageWithSelectedCurrencies(http_request request)
     }
     catch (const std::exception &e)
     {
-        // Log the exception, prepare an error response
+        // log exception, prepare error response
         std::cerr << "Error: " << e.what() << std::endl;
 
         http_response errorResponse(status_codes::InternalError);
