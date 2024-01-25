@@ -17,7 +17,7 @@ The project is divided into several key components:
 
 ### Requirements and Dependencies
 
-- C++17 or higher
+- C++17 or later
 - C++ REST SDK (cpprest)
 - nlohmann/json for JSON parsing
 

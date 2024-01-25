@@ -10,7 +10,7 @@ using namespace web;
 using namespace web::http;
 using namespace web::http::experimental::listener;
 
-// replace your exchangerates.io access key here
+// replace your exchangeratesapi.io access key here
 std::string accessKey = "7f09f801121498f7c9325de9d3038e49";
 
 std::unique_ptr<http_listener> listener;
