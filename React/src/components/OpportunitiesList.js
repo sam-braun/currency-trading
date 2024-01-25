@@ -71,13 +71,22 @@ function OpportunitiesList({ opportunities }) {
 
     return (
         <>
-            <ul>
-                {currentOpportunities.map((opp, index) => (
-                    <li key={index}>
-                        {opp.from} -&gt; {opp.mid} -&gt; {opp.to} -&gt; {opp.from}, Profit: {opp.profit}
-                    </li>
-                ))}
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Opportunity</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentOpportunities.map((opp, index) => (
+                        <tr key={index}>
+                            <td>{opp.from} &#8594; {opp.mid} &#8594; {opp.to} &#8594; {opp.from}</td>
+                            <td>{opp.profit}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
             <div>
                 {renderPageButtons()}
             </div>

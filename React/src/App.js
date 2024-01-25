@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CurrencyInputForm from './components/CurrencyInputForm';
 import OpportunitiesList from './components/OpportunitiesList';
+import MenuBar from './components/MenuBar';
 
 function App() {
   const [currencies, setCurrencies] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
-  const [selectedCurrencies, setSelectedCurrencies] = useState([]);
-
+  const [menuCurrency, setMenuCurrency] = useState('');
 
   useEffect(() => {
     fetchAvailableCurrencies();
@@ -24,17 +24,22 @@ function App() {
 
   const fetchArbitrageOpportunities = async (baseCurrency, selectedCurrencies) => {
     try {
-        const response = await axios.get(`http://localhost:8080/arbitrageWithSelectedCurrencies?baseCurrency=${baseCurrency}&selectedCurrencies=${selectedCurrencies.join(',')}`);
-        setOpportunities(response.data);
+      const response = await axios.get(`http://localhost:8080/arbitrageWithSelectedCurrencies?baseCurrency=${baseCurrency}&selectedCurrencies=${selectedCurrencies.join(',')}`);
+      setOpportunities(response.data);
     } catch (error) {
-        console.error('Error fetching data:', error);
+      console.error('Error fetching data:', error);
     }
+  };
+
+  const handleMenuCurrencyChange = (currency) => {
+    setMenuCurrency(currency);
   };
 
   return (
     <div>
-      <h1>Arbitrage Opportunities Finder</h1>
-      <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} />
+      <center><h1>Arbitrage Opportunities Finder</h1></center>
+      <MenuBar availableCurrencies={currencies} onCurrencySelect={handleMenuCurrencyChange} />
+      <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} baseCurrency={menuCurrency} />
       <OpportunitiesList opportunities={opportunities} />
     </div>
   );

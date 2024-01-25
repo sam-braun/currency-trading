@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function CurrencyInputForm({ onSubmit, availableCurrencies }) {
-    const [baseCurrency, setBaseCurrency] = useState('');
+function CurrencyInputForm({ onSubmit, availableCurrencies, baseCurrency }) {
     const [selectedCurrencies, setSelectedCurrencies] = useState({});
     const [selectAll, setSelectAll] = useState(false);
 
@@ -12,10 +11,6 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
         }, {});
         setSelectedCurrencies(updatedSelectedCurrencies);
     }, [selectAll, availableCurrencies]);
-
-    const handleBaseCurrencyChange = (event) => {
-        setBaseCurrency(event.target.value);
-    };
 
     const handleCurrencyCheckboxChange = (currencyCode) => {
         setSelectedCurrencies(prevSelectedCurrencies => ({
@@ -48,26 +43,11 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
     };
 
     // Sort availableCurrencies alphabetically using the code property
-    const sortedCurrencies = [...availableCurrencies].sort((a, b) => {
-        const codeA = a.code || a;
-        const codeB = b.code || b;
-        return codeA.localeCompare(codeB);
-    });
+    const sortedCurrencies = [...availableCurrencies].sort((a, b) => a.code.localeCompare(b.code));
 
     return (
         <form onSubmit={handleSubmit}>
-            <label>
-                Select base currency: {' '}
-                <select value={baseCurrency} onChange={handleBaseCurrencyChange}>
-                    {sortedCurrencies.map(currency => (
-                        <option key={currency.code} value={currency.code}>
-                            {currency.code} - {currency.name}
-                        </option>
-                    ))}
-                </select>
-            </label>
             <br />
-
             <label>
                 Select target currencies:
             </label>
