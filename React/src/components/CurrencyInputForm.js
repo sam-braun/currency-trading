@@ -73,11 +73,14 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
                 Select a base currency:
                 <select onChange={handleBaseCurrencyChange} value={baseCurrency} style={inputStyle}>
                     <option value="">Select a currency</option>
-                    {availableCurrencies.map((currency) => (
-                        <option key={currency.code} value={currency.code}>
-                            {currency.code} - {currency.name}
-                        </option>
-                    ))}
+                    {availableCurrencies
+                        .sort((a, b) => a.name.localeCompare(b.name)) // Sort by name
+                        .map((currency) => (
+                            <option key={currency.code} value={currency.code}>
+                                {currency.code} - {currency.name}
+                            </option>
+                        ))
+                    }
                 </select>
             </label>
             <br />

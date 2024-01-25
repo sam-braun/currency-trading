@@ -8,7 +8,7 @@ import './App.css';
 function App() {
   const [currencies, setCurrencies] = useState([]);
   const [opportunities, setOpportunities] = useState([]);
-  const [menuCurrency, setMenuCurrency] = useState('');
+  // const [menuCurrency, setMenuCurrency] = useState('');
 
   useEffect(() => {
     fetchAvailableCurrencies();
@@ -32,16 +32,16 @@ function App() {
     }
   };
 
-  const handleMenuCurrencyChange = (currency) => {
-    setMenuCurrency(currency);
-  };
+  // const handleMenuCurrencyChange = (currency) => {
+  //   setMenuCurrency(currency);
+  // };
 
   return (
     <div>
       <center><h1>Arbitrage Opportunity Detector</h1></center>
-      <MenuBar availableCurrencies={currencies} onCurrencySelect={handleMenuCurrencyChange} />
+      <MenuBar/>
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
-        <div style={{ flex: '0 0 30%', marginRight: '10px' }}> {/* Changed this line */}
+        <div style={{ flex: '0 0 30%', marginRight: '50px' }}> {/* Changed this line */}
           <CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} />
         </div>
         <div style={{ flex: '0 0 70%', marginLeft: '10px' }}> {/* Changed this line */}
@@ -49,7 +49,7 @@ function App() {
         </div>
       </div>
     </div>
-  );
+  );  
 }
 
 export default App;

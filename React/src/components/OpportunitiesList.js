@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PAGE_SIZE = 20; // Number of opportunities per page
+const PAGE_SIZE = 18; // Number of opportunities per page
 const MAX_PAGE_BUTTONS = 10; // Maximum number of page buttons to display
 
 function OpportunitiesList({ opportunities }) {
@@ -59,15 +59,6 @@ function OpportunitiesList({ opportunities }) {
         return buttons;
     };
 
-    const tableStyle = {
-        margin: '0 auto', // centers table
-        borderCollapse: 'collapse'
-    };
-
-    const cellStyle = {
-        padding: '7px 20px' // adds space between columns
-    };
-
     const renderButton = (pageNumber) => (
         <button
             key={pageNumber}
@@ -77,6 +68,15 @@ function OpportunitiesList({ opportunities }) {
             {pageNumber}
         </button>
     );
+
+    const tableStyle = {
+        margin: '0 auto',
+        borderCollapse: 'collapse'
+    };
+
+    const cellStyle = {
+        padding: '7px 20px' // add space between columns
+    };
 
     const paginationStyle = {
         display: 'flex',
