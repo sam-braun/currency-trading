@@ -1,3 +1,15 @@
+body {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.853)), url('../public/2013_Federal_Reserve_Bank_of_New_York.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  
+}
+
 .App {
   text-align: center;
 }
@@ -35,10 +47,9 @@
 
 .header {
   background-color: #123456; /* replace with the dark blue color from the image */
-  color: white;
+  
   padding: 20px 0;
 }
-
 
 .menu-bar-content {
   background-color: #345678;

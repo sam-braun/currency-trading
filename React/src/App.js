@@ -41,7 +41,6 @@ function App() {
     setShowInstructions(true);
   };
 
-
   return (
     <div>
       {showInstructions && <InstructionModal onClose={handleCloseInstructions} />}
