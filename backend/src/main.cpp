@@ -70,18 +70,18 @@ void handleGetAvailableCurrencies(http_request request)
     ArbitrageDetector arbitrageDetector(exchangeRates);
     auto availableCurrencies = arbitrageDetector.getAvailableCurrencies();
 
-    // Parse the CSV and create a mapping of currency codes to names and symbols
-    std::unordered_map<std::string, std::pair<std::string, std::string>> currencyInfoMap;
+    std::unordered_map<std::string, std::tuple<std::string, std::string, std::string>> currencyInfoMap;
     std::ifstream file("../resources/currency_list.csv");
     std::string line;
     while (std::getline(file, line))
     {
         std::istringstream iss(line);
-        std::string code, name, symbol;
+        std::string code, name, symbol, emoji;
         std::getline(iss, code, ',');
         std::getline(iss, name, ',');
         std::getline(iss, symbol, ',');
-        currencyInfoMap[code] = std::make_pair(name, symbol);
+        std::getline(iss, emoji, ',');
+        currencyInfoMap[code] = std::make_tuple(name, symbol, emoji);
     }
 
     json::value jsonResponse = json::value::array();
@@ -90,8 +90,9 @@ void handleGetAvailableCurrencies(http_request request)
         jsonResponse[i]["code"] = json::value::string(availableCurrencies[i]);
         if (currencyInfoMap.find(availableCurrencies[i]) != currencyInfoMap.end())
         {
-            jsonResponse[i]["name"] = json::value::string(currencyInfoMap[availableCurrencies[i]].first);
-            jsonResponse[i]["symbol"] = json::value::string(currencyInfoMap[availableCurrencies[i]].second);
+            jsonResponse[i]["name"] = json::value::string(std::get<0>(currencyInfoMap[availableCurrencies[i]]));
+            jsonResponse[i]["symbol"] = json::value::string(std::get<1>(currencyInfoMap[availableCurrencies[i]]));
+            jsonResponse[i]["emoji"] = json::value::string(std::get<2>(currencyInfoMap[availableCurrencies[i]]));
         }
     }
 

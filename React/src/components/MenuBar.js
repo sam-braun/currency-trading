@@ -27,7 +27,7 @@ function MenuBar({ availableCurrencies, onCurrencySelect }) {
         <option value="" >Select a currency</option>
         {availableCurrencies.map((currency) => (
           <option key={currency.code} value={currency.code}>
-            {currency.code} - {currency.name}
+            {currency.code} - {currency.name} {currency.emoji} 
           </option>
         ))}
       </select>
