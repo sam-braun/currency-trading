@@ -4,53 +4,42 @@
 
 This project is an Arbitrage Opportunity Detector that analyzes exchange rates to identify potential arbitrage opportunities across different currencies. It includes a backend implemented in C++ using the C++ REST SDK (cpprest) for handling HTTP requests and a frontend built with React.
 
-## Project Structure
+## Table of Contents
 
-The project is divided into several key components:
+1. [Requirements and Dependencies](#Requirements and Dependencies)
+2. [Backend Key Functions](#Backend Key Functions)
+3. [Frontend Components](#Frontend Components)
+4. [Setup](#Setup)
+5. [Usage](#Usage)
 
-- `http_listener`: Handles HTTP requests and responses.
-- `ApiClient`: Fetches exchange rates from an external API.
-- `ArbitrageDetector`: Analyzes exchange rates to detect arbitrage opportunities.
-- `React Frontend`: A user interface for interacting with the backend.
+## Requirements and Dependencies
 
-## Backend
-
-### Requirements and Dependencies
+To correctly compile the backend:
 
 - C++17 or later
 - C++ REST SDK (cpprest)
 - nlohmann/json for JSON parsing
 
-### Exchange Rate API
-
-You will need to create your own API access token. Here are the instructions:
-
-1. Visit https://exchangeratesapi.io.
-2. Create an account.
-3. Navigate to your dashboard and copy your API access token.
-4. Paste the access token in the access_token fields in `main.cpp`.
-
-### Key Functions
-
-- `handleGetRates`: Fetches exchange rates.
-- `handleGetAvailableCurrencies`: Provides a list of available currencies.
-- `handleFindArbitrageWithSelectedCurrencies`: Finds arbitrage opportunities for selected currencies.
-
-## Frontend
-
-### Dependencies
+To correctly run the react app:
 
 - React
+- NPM package manager
 - Axios for HTTP requests
 
-### Components
+## Backend Key Functions
+
+- `handleGetRates`: Fetches up-to-date exchange rates.
+- `handleGetAvailableCurrencies`: Provides a list of available currencies to use to calculate arbitragr.
+- `handleFindArbitrageWithSelectedCurrencies`: Finds arbitrage opportunities for selected currencies.
+
+## Frontend Components
 
 - `CurrencyInputForm`: Allows users to select currencies and initiate searches for arbitrage opportunities.
-- `OpportunitiesList`: Displays the list of detected arbitrage opportunities.
-- `MenuBar`: Provides additional user interface features.
+- `OpportunitiesList`: Displays list of detected arbitrage opportunities.
+- `MenuBar`: Dislays time of arbitrage calculations and provides usage instructions.
 - `InstructionModal`: Displays instructions for using the application.
 
-### Setup
+## Setup
 
 1. Install C++ REST SDK and other required libraries (using a package manager like vcpkg is recommended).
 2. Install Node.js and npm.
