@@ -2,7 +2,7 @@
 
 ## Overview
 
-Triangular arbitrage is a financial strategy that takes advantage of exchange rate discrepancies between three currencies to generate a risk-free profit. This project is an Arbitrage Opportunity Detector that analyzes exchange rates to identify potential arbitrage opportunities across different currencies. It includes a backend implemented in C++ using the C++ REST SDK (cpprest) for handling HTTP requests and a frontend built with React.
+Triangular arbitrage is a strategy that takes advantage of exchange rate discrepancies between three currencies to generate a risk-free profit. This Arbitrage Opportunity Detector analyzes exchange rates to identify potential arbitrage opportunities across different currencies. It includes a backend implemented in C++ and a frontend built with React.
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ pacman -S \
 1. Clone the repository:
 
 ```bash
-git clone [repository-url]
+git clone [https://github.com/sam-braun/currency-trading.git]
 cd currency-trading
 ```
 
@@ -70,6 +70,9 @@ cd React
 npm install
 cd ..
 ```
+
+3. Create your API key:
+Paste your API key into `config.json`. You can get your API key from [APILayer's Exchange Rates Data API](https://apilayer.com/marketplace/exchangerates_data-api?utm_source=apilayermarketplace&utm_medium=featured).
 
 ## Running the Application
 
