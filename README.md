@@ -4,51 +4,94 @@
 
 Triangular arbitrage is a financial strategy that takes advantage of exchange rate discrepancies between three currencies to generate a risk-free profit. This project is an Arbitrage Opportunity Detector that analyzes exchange rates to identify potential arbitrage opportunities across different currencies. It includes a backend implemented in C++ using the C++ REST SDK (cpprest) for handling HTTP requests and a frontend built with React.
 
-## Table of Contents
+## Prerequisites
 
-1. [Requirements and Dependencies](#Requirements)
-2. [Backend Key Functions](#Backend)
-3. [Frontend Components](#Frontend)
-4. [Setup](#Setup)
-5. [Usage](#Usage)
+### macOS
 
-## Requirements and Dependencies
+```bash
+# Install Homebrew if you haven't already
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-To correctly compile the backend:
+# Install required packages
+brew install boost cpprestsdk jsoncpp openssl curl
+brew install node  # For React frontend
+```
 
-- C++17 or later
-- C++ REST SDK (cpprest)
-- nlohmann/json for JSON parsing
+### Linux (Ubuntu/Debian)
 
-To correctly run the react app:
+```bash
+# Install required packages
+sudo apt-get update
+sudo apt-get install -y \
+    g++ \
+    libboost-all-dev \
+    libcpprest-dev \
+    libjsoncpp-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    curl
 
-- React
-- NPM package manager
-- Axios for HTTP requests
+# Install Node.js and npm
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
 
-## Backend Key Functions
+### Windows
 
-- `handleGetRates`: Fetches up-to-date exchange rates.
-- `handleGetAvailableCurrencies`: Provides a list of available currencies to use to calculate arbitragr.
-- `handleFindArbitrageWithSelectedCurrencies`: Finds arbitrage opportunities for selected currencies.
+1. Install [MSYS2](https://www.msys2.org/) which provides a Unix-like environment
+2. Open MSYS2 and run:
 
-## Frontend Components
+```bash
+pacman -Syu
+pacman -S \
+    mingw-w64-x86_64-gcc \
+    mingw-w64-x86_64-boost \
+    mingw-w64-x86_64-cpprest \
+    mingw-w64-x86_64-jsoncpp \
+    mingw-w64-x86_64-openssl \
+    mingw-w64-x86_64-curl
+```
 
-- `CurrencyInputForm`: Allows users to select currencies and initiate searches for arbitrage opportunities.
-- `OpportunitiesList`: Displays list of detected arbitrage opportunities.
-- `MenuBar`: Dislays time of arbitrage calculations and provides usage instructions.
-- `InstructionModal`: Displays instructions for using the application.
+3. Install [Node.js](https://nodejs.org/) for Windows
 
-## Setup
+## Installation
 
-1. Install C++ REST SDK and other required libraries (using a package manager like vcpkg is recommended).
-2. Install Node.js and npm.
-3. Customize `start.sh` for your machine's package locations.
+1. Clone the repository:
 
-## Usage
+```bash
+git clone [repository-url]
+cd currency-trading
+```
 
-1. Run `bash start.sh` to compile the backend, and lauch the backend and React app.
-2. Start the backend server.
-3. Open the frontend application in a web browser.
-4. Select a base currency and additional currencies to calculate arbitrage.
-5. Click 'Find Arbitrage Opportunities' to view the results.
+2. Install React dependencies:
+
+```bash
+cd React
+npm install
+cd ..
+```
+
+## Running the Application
+
+The entire application (both backend and frontend) can be started using a single script:
+
+```bash
+./start.sh
+```
+
+This will:
+
+1. Compile the C++ backend
+2. Start the backend server
+3. Launch the React frontend
+
+The React application should automatically open in your default web browser. If it doesn't, visit http://localhost:3000
+
+## Stopping the Application
+
+To stop the application:
+
+1. Press `Ctrl + C` in the terminal to stop the React development server
+2. For the backend process:
+   - On macOS/Linux: Run `killall arb_backend`
+   - On Windows (in MSYS2): Run `taskkill /F /IM arb_backend.exe`

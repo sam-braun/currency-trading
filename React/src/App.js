@@ -16,14 +16,14 @@ function App() {
 		fetchAvailableCurrencies();
 	}, []);
 
-  	const fetchAvailableCurrencies = async () => {
+	const fetchAvailableCurrencies = async () => {
 		try {
 			const response = await axios.get(`http://localhost:8080/availableCurrencies`);
 			setCurrencies(response.data);
 		} catch (error) {
 			console.error('Error fetching available currencies:', error);
 		}
-  	};
+	};
 
 	const fetchArbitrageOpportunities = async (baseCurrency, selectedCurrencies) => {
 		try {
@@ -46,20 +46,20 @@ function App() {
 		<div>
 			{showInstructions && <InstructionModal onClose={handleCloseInstructions} />}
 			<center><h1>Arbitrage Opportunity Detector</h1></center>
-			<MenuBar 
-				availableCurrencies={currencies} 
+			<MenuBar
+				availableCurrencies={currencies}
 				onShowInstructions={handleShowInstructions} // Add this prop
 			/>
 			<div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
 				<div style={{ flex: '0 0 30%', marginRight: '50px' }}> {/* Changed this line */}
-				<CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} />
+					<CurrencyInputForm onSubmit={fetchArbitrageOpportunities} availableCurrencies={currencies} />
 				</div>
 				<div style={{ flex: '0 0 70%', marginLeft: '10px' }}> {/* Changed this line */}
-				<OpportunitiesList opportunities={opportunities} />
+					<OpportunitiesList opportunities={opportunities} />
 				</div>
 			</div>
 		</div>
-	);  
+	);
 }
 
 export default App;

@@ -1,16 +1,13 @@
-#ifndef APICLIENT_H
-#define APICLIENT_H
+#pragma once
 
 #include <string>
 #include <unordered_map>
 
 class ApiClient {
 public:
-    ApiClient(const std::string& url);
+    ApiClient(const std::string& base);
     std::unordered_map<std::string, double> fetchRates();
 
 private:
-    std::string m_url;
+    std::string m_base;
 };
-
-#endif // APICLIENT_H

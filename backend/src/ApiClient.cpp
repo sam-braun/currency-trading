@@ -21,7 +21,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::stri
 }
 
 // initialize ApiClient
-ApiClient::ApiClient(const std::string &url) : m_url(url) {}
+ApiClient::ApiClient(const std::string &base) : m_base(base) {}
 
 // fetch exchange rates
 std::unordered_map<std::string, double> ApiClient::fetchRates()
@@ -35,10 +35,23 @@ std::unordered_map<std::string, double> ApiClient::fetchRates()
     curl = curl_easy_init();
     if (curl)
     {
-        curl_easy_setopt(curl, CURLOPT_URL, m_url.c_str());
+        std::string url = "https://api.apilayer.com/exchangerates_data/latest?base=" + m_base;
+        
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
+        
+        struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "apikey: O1pgs4kxOCGZHKBDlhy3aE680xtjYXSh");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        
         res = curl_easy_perform(curl);
+        
+        curl_slist_free_all(headers);
         curl_easy_cleanup(curl);
 
         if (res == CURLE_OK)
@@ -46,17 +59,30 @@ std::unordered_map<std::string, double> ApiClient::fetchRates()
             try
             {
                 auto jsonData = json::parse(readBuffer);
-                auto symbols = jsonData["rates"];
-                for (auto &[key, value] : symbols.items())
+                if (jsonData["success"].get<bool>())
                 {
-                    rates[key] = value.get<double>();
+                    auto symbols = jsonData["rates"];
+                    for (auto &[key, value] : symbols.items())
+                    {
+                        rates[key] = value.get<double>();
+                    }
+                }
+                else
+                {
+                    std::cerr << "API Error: " << jsonData["error"]["info"].get<std::string>() << std::endl;
                 }
             }
-            catch (json::parse_error &e)
+            catch (const json::exception &e)
             {
-                std::cerr << "JSON parse error: " << e.what() << std::endl;
+                std::cerr << "JSON parsing error: " << e.what() << std::endl;
             }
         }
+        else
+        {
+            std::cerr << "Curl error: " << curl_easy_strerror(res) << std::endl;
+        }
     }
+
+    curl_global_cleanup();
     return rates;
 }

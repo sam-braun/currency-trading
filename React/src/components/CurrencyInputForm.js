@@ -67,6 +67,17 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
         margin: '10px 0'
     };
 
+    const currencyItemStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        padding: '4px 0'
+    };
+
+    const emojiStyle = {
+        marginRight: '8px',
+        fontSize: '1.2em'
+    };
+
     return (
         <form onSubmit={handleSubmit}>
             <label>
@@ -74,10 +85,10 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
                 <select onChange={handleBaseCurrencyChange} value={baseCurrency} style={inputStyle}>
                     <option value="">Select a currency</option>
                     {availableCurrencies
-                        .sort((a, b) => a.name.localeCompare(b.name)) // Sort by name
+                        .sort((a, b) => a.name.localeCompare(b.name))
                         .map((currency) => (
                             <option key={currency.code} value={currency.code}>
-                                {currency.code} - {currency.name}
+                                {currency.emoji} {currency.code} - {currency.name}
                             </option>
                         ))
                     }
@@ -89,34 +100,51 @@ function CurrencyInputForm({ onSubmit, availableCurrencies }) {
             </label>
             <input 
                 type="text"
-                placeholder="Search currencies..."
+                placeholder="Search currencies by code or name..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 style={inputStyle}
             />
+            <div>
+                <label style={currencyItemStyle}>
+                    <input 
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAllCurrencies}
+                    />
+                    <span style={{ marginLeft: '8px' }}>Select All</span>
+                </label>
+            </div>
             <div style={currencyCheckboxContainerStyle}>
                 {filteredCurrencies.map(currency => (
-                    <div key={currency.code}>
-                        <input 
-                            type="checkbox"
-                            id={currency.code}
-                            checked={!!selectedCurrencies[currency.code]}
-                            onChange={() => handleCurrencyCheckboxChange(currency.code)}
-                        />
-                        <label htmlFor={currency.code}>{currency.code} - {currency.name}</label>
+                    <div key={currency.code} style={currencyItemStyle}>
+                        <label style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                            <input 
+                                type="checkbox"
+                                checked={selectedCurrencies[currency.code] || false}
+                                onChange={() => handleCurrencyCheckboxChange(currency.code)}
+                            />
+                            <span style={emojiStyle}>{currency.emoji}</span>
+                            <span>{currency.code} - {currency.name}</span>
+                        </label>
                     </div>
                 ))}
             </div>
-
-            <div style={{ marginTop: '10px' }}>
-                <button type="button" onClick={handleSelectAllCurrencies}>
-                    {selectAll ? 'Deselect All Currencies' : 'Select All Currencies'}
-                </button>
-            </div>
-
-            <div style={{ marginTop: '10px' }}>
-                <button type="submit" disabled={isSubmitDisabled}>Find Arbitrage Opportunities</button>
-            </div>
+            <button 
+                type="submit" 
+                disabled={isSubmitDisabled}
+                style={{
+                    padding: '10px 20px',
+                    marginTop: '10px',
+                    backgroundColor: isSubmitDisabled ? '#cccccc' : '#4CAF50',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: isSubmitDisabled ? 'not-allowed' : 'pointer'
+                }}
+            >
+                Find Arbitrage Opportunities
+            </button>
         </form>
     );
 }
