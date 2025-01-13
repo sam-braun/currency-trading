@@ -50,7 +50,7 @@ fi
 cd ../../
 
 echo "Starting frontend..."
-cd React
+cd frontend
 
 # Check if node_modules exists, if not run npm install
 if [ ! -d "node_modules" ]; then

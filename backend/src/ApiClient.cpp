@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <fstream>
 
 using json = nlohmann::json; // alias
 
@@ -19,6 +20,17 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::stri
     {
         return 0;
     }
+}
+
+// reads api key from config file
+std::string getApiKey() {
+    std::ifstream config_file("../config.json");
+    if (!config_file.is_open()) {
+        throw std::runtime_error("Unable to open config.json");
+    }
+    json config;
+    config_file >> config;
+    return config["api_key"];
 }
 
 // constructor initializes api client with base currency
@@ -44,7 +56,8 @@ std::unordered_map<std::string, double> ApiClient::fetchRates()
         curl_easy_setopt(curl, CURLOPT_DEFAULT_PROTOCOL, "https");
         
         struct curl_slist *headers = NULL;
-        headers = curl_slist_append(headers, "apikey: O1pgs4kxOCGZHKBDlhy3aE680xtjYXSh");
+        std::string api_key = "apikey: " + getApiKey();
+        headers = curl_slist_append(headers, api_key.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
