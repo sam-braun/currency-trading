@@ -4,8 +4,9 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json; // Alias for convenience
+using json = nlohmann::json; // alias
 
+// callback function to write received data to string buffer
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *s)
 {
     size_t newLength = size * nmemb;
@@ -20,10 +21,10 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::stri
     }
 }
 
-// initialize ApiClient
+// constructor initializes api client with base currency
 ApiClient::ApiClient(const std::string &base) : m_base(base) {}
 
-// fetch exchange rates
+// fetches current exchange rates from external api service
 std::unordered_map<std::string, double> ApiClient::fetchRates()
 {
     CURL *curl;

@@ -13,6 +13,7 @@ using namespace web::http::experimental::listener;
 
 namespace rate_handlers {
 
+// adds cors headers to allow cross-origin requests
 void addCorsHeaders(http_response &response)
 {
     response.headers().add(U("Access-Control-Allow-Origin"), U("*"));
@@ -20,6 +21,7 @@ void addCorsHeaders(http_response &response)
     response.headers().add(U("Access-Control-Allow-Headers"), U("Content-Type"));
 }
 
+// parses comma-separated currency string into vector of currencies
 std::vector<std::string> parseSelectedCurrencies(const std::string &selectedCurrenciesStr)
 {
     std::vector<std::string> selectedCurrencies;
@@ -34,6 +36,7 @@ std::vector<std::string> parseSelectedCurrencies(const std::string &selectedCurr
     return selectedCurrencies;
 }
 
+// handles get request for exchange rates with eur as base currency
 void handleGetRates(http_request request)
 {
     std::cout << "Handling GET request for /rates" << std::endl;
@@ -58,6 +61,7 @@ void handleGetRates(http_request request)
     }
 }
 
+// handles get request for list of available currencies with additional metadata
 void handleGetAvailableCurrencies(http_request request)
 {
     std::cout << "Handling GET request for /availableCurrencies" << std::endl;
@@ -131,6 +135,7 @@ void handleGetAvailableCurrencies(http_request request)
     }
 }
 
+// finds arbitrage opportunities using specified base currency
 void handleFindArbitrage(http_request request)
 {
     std::cout << "handleFindArbitrage" << std::endl;
@@ -168,6 +173,7 @@ void handleFindArbitrage(http_request request)
     }
 }
 
+// finds arbitrage opportunities with user-selected subset of currencies
 void handleFindArbitrageWithSelectedCurrencies(http_request request)
 {
     try {
