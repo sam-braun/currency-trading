@@ -34,7 +34,7 @@ LIBRARIES="-lcurl -lboost_system -lssl -lcrypto -lcpprest -ljsoncpp"
 # Navigate to backend directory and compile
 cd "$BACKEND_DIR"
 
-g++ -std=c++17 -o "$BACKEND_OUTPUT" main.cpp ApiClient.cpp ArbitrageDetector.cpp $LIBRARIES -I$INCLUDE_PATH -L$LIBRARY_PATH
+g++ -std=c++17 -o "$BACKEND_OUTPUT" main.cpp ApiClient.cpp RateHandlers.cpp ArbitrageDetector.cpp $LIBRARIES -I$INCLUDE_PATH -L$LIBRARY_PATH
 
 if [ $? -eq 0 ]; then
     echo "Backend compilation successful. Starting backend..."
