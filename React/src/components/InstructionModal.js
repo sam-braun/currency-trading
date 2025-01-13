@@ -22,11 +22,11 @@ function InstructionModal({ onClose }) {
                 width: '100%'
             }}>
                 <h2>Welcome to the Arbitrage Opportunity Detector!</h2>
-                <p>Instructions on how to use the application:</p>
+                <p>Here's how you can find your own triangular currency arbitrage opportunities:</p>
                 <ul>
                     <li>Select a base currency.</li>
                     <li>Choose additional currencies to compare.</li>
-                    <li>Click 'Find Arbitrage Opportunities' to see the results.</li>
+                    <li>Click 'Find Arbitrage Opportunities' to see the results!</li>
                 </ul>
                 <button onClick={onClose} style={{ marginTop: '20px' }}>Close</button>
             </div>
